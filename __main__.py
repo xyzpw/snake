@@ -113,7 +113,7 @@ wn.onkeypress(quit_game, "Escape")
 segments = []
 
 def addTails():
-    for i in range(6):
+    for i in range(19):
         startingTail = turtle.Turtle()
         startingTail.speed(0)
         startingTail.shape("square")
@@ -139,7 +139,7 @@ while True:
         segments.clear()
         addTails()
         score = 0
-        delay = 0.1
+        delay = 0.07
         pen.clear()
         pen.write("{} (High Score {})".format(
             score, high_score), align="center", font=("candara", 24, "bold"))
@@ -155,7 +155,6 @@ while True:
         new_segment.penup()
         segments.append(new_segment)
         #delay -= 0.001
-        delay -= delay * .017
         score += 7
         if score > high_score:
             high_score = score
@@ -188,7 +187,7 @@ while True:
             segment.clear()
             segments.clear()
             score = 0
-            delay = 0.1
+            delay = 0.07
             pen.clear()
             pen.write("{} (High Score {})".format(
                 score, high_score), align="center", font=("candara", 24, "bold"))
