@@ -5,6 +5,7 @@ import turtle
 import time
 import random
 import json
+import playsound
 
 random.seed(int(time.time()))
 
@@ -134,6 +135,14 @@ while True:
     if len(segments) < 1:
         addTails()
     if head.xcor() > 290 or head.xcor() < -290 or head.ycor() > 290 or head.ycor() < -290:
+        if head.direction != "stop":
+            try:
+                playsound.playsound("gameover.wav")
+            except:
+                try:
+                    playsound.playsound("snake/gameover.wav")
+                except Exception as e:
+                    print(e)
         time.sleep(1)
         head.goto(0, 0)
         head.direction = "Stop"
@@ -141,12 +150,19 @@ while True:
         for segment in segments:
             segment.goto(1000, 1000)
         segments.clear()
-        addTails()
+        #addTails()
         score = 0
         pen.clear()
         pen.write("{} (High Score {})".format(
             score, high_score), align="center", font=("candara", 24, "bold"))
     if head.distance(food) < 20:
+        try:
+            playsound.playsound("food.wav")
+        except:
+            try:
+                playsound.playsound("snake/food.wav")
+            except Exception as e:
+                print(e)
         x = random.randint(-270, 270)
         y = random.randint(-270, 270)
         shapes = random.choice(['square', 'circle'])
@@ -181,6 +197,14 @@ while True:
     move()
     for segment in segments:
         if segment.distance(head) < 20:
+            if head.direction != "stop" and head.pos() != (0, 0):
+                try:
+                    playsound.playsound("gameover.wav")
+                except:
+                    try:
+                        playsound.playsound("snake/gameover.wav")
+                    except Exception as e:
+                        print(e)
             time.sleep(1)
             head.goto(0, 0)
             head.direction = "stop"
