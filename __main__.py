@@ -6,6 +6,7 @@ import time
 import random
 import json
 import playsound
+import sys
 
 random.seed(int(time.time()))
 
@@ -21,14 +22,19 @@ except:
     except Exception as e:
         exit("Error occured: {e}")
 
+SOUND = "on"
 delay = 0.07
 score = 0
 high_score = int(gameinfo['highscore'])
+for arg in sys.argv:
+    if arg == "--nosound":
+        SOUND = "off"
 
 
 
 # Creating a window screen
 wn = turtle.Screen()
+wn.delay(0)
 wn.title("Snake Game")
 wn.bgcolor("#6e7fa0")
 # the width and height can be put as user's choice
@@ -135,12 +141,20 @@ while True:
     if len(segments) < 1:
         addTails()
     if head.xcor() > 290 or head.xcor() < -290 or head.ycor() > 290 or head.ycor() < -290:
-        if head.direction != "stop":
+        if head.direction != "stop" and high_score > score and SOUND == "on":
             try:
                 playsound.playsound("gameover.wav")
             except:
                 try:
                     playsound.playsound("snake/gameover.wav")
+                except Exception as e:
+                    print(e)
+        if head.direction != "stop" and high_score <= score and SOUND == "on":
+            try:
+                playsound.playsound("highscore.wav")
+            except:
+                try:
+                    playsound.playsound("snake/highscore.wav")
                 except Exception as e:
                     print(e)
         time.sleep(1)
@@ -156,13 +170,14 @@ while True:
         pen.write("{} (High Score {})".format(
             score, high_score), align="center", font=("candara", 24, "bold"))
     if head.distance(food) < 20:
-        try:
-            playsound.playsound("food.wav")
-        except:
+        if SOUND == "on":
             try:
-                playsound.playsound("snake/food.wav")
-            except Exception as e:
-                print(e)
+                playsound.playsound("food.wav")
+            except:
+                try:
+                    playsound.playsound("snake/food.wav")
+                except Exception as e:
+                    print(e)
         x = random.randint(-270, 270)
         y = random.randint(-270, 270)
         shapes = random.choice(['square', 'circle'])
@@ -197,12 +212,20 @@ while True:
     move()
     for segment in segments:
         if segment.distance(head) < 20:
-            if head.direction != "stop" and head.pos() != (0, 0):
+            if head.direction != "stop" and head.pos() != (0, 0) and high_score > score and SOUND == "on":
                 try:
                     playsound.playsound("gameover.wav")
                 except:
                     try:
                         playsound.playsound("snake/gameover.wav")
+                    except Exception as e:
+                        print(e)
+            if head.direction != "stop" and head.pos() != (0, 0) and high_score <= score and SOUND == "on":
+                try:
+                    playsound.playsound("highscore.wav")
+                except:
+                    try:
+                        playsound.playsound("snake/highscore")
                     except Exception as e:
                         print(e)
             time.sleep(1)
@@ -211,6 +234,7 @@ while True:
             shapes = random.choice(['square', 'circle'])
             for segment in segments:
                 segment.goto(1000, 1000)
+                segment.ht()
             segment.clear()
             segments.clear()
             score = 0
