@@ -7,6 +7,17 @@ import random
 import json
 import playsound
 import sys
+import argparse
+
+parser = argparse.ArgumentParser(
+    prog="Snake",
+    description="Options for snake game"
+)
+parser.add_argument("--nosound",
+action="store_true", help="Disable sound")
+parser.add_argument("--expert",
+action="store_true", help="Makes the game more difficult")
+args = parser.parse_args()
 
 random.seed(int(time.time()))
 
@@ -23,12 +34,15 @@ except:
         exit("Error occured: {e}")
 
 SOUND = "on"
+EXPERT = args.expert
 delay = 0.07
 score = 0
 high_score = int(gameinfo['highscore'])
-for arg in sys.argv:
-    if arg == "--nosound":
-        SOUND = "off"
+if args.nosound:
+    SOUND = "off"
+if EXPERT:
+    delay = 0.035
+    high_score = int(gameinfo['highscore_expert'])
 
 
 
@@ -194,7 +208,10 @@ while True:
         if score > high_score:
             high_score = score
             f = open("gameinfo.json", 'w')
-            gameinfo["highscore"] = str(high_score)
+            if EXPERT:
+                gameinfo["highscore_expert"] = str(high_score)
+            else:
+                gameinfo["highscore"] = str(high_score)
             f.write(json.dumps(gameinfo))
             f.close()
         pen.clear()
